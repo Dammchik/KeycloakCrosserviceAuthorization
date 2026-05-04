@@ -1,0 +1,6 @@
+{
+    "Dictionary": true,
+    "Auth": true,
+    "ApiGateway": true,
+    "TestService": true
+}

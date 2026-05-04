@@ -1,0 +1,17 @@
+meta {
+  name: alias
+  type: http
+  seq: 5
+}
+
+patch {
+  url: http://localhost:8085/api/v1/dictionary/{{dictionaryId}}/alias
+  body: json
+  auth: none
+}
+
+body:json {
+    {
+      "alias": "алиас"
+    }
+}

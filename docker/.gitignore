@@ -1,0 +1,25 @@
+# Файлы IDE
+.idea
+nbproject
+.buildpath
+.project
+.settings
+
+# Кэш эскизов и иных вещей ОС
+Thumbs.db
+.DS_Store
+
+# Папки и файлы компонентов
+/vendor
+/runtime
+/node_modules
+.phpdoc
+
+# tests
+tests/_output/*
+tests/_support/_generated
+
+# Доп. файлы
+.env
+
+/minio-data

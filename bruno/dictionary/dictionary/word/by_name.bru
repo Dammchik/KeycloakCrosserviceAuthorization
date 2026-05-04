@@ -1,0 +1,16 @@
+meta {
+  name: by_name
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{host}}/v1/dictionary/{{dictionaryId}}/word/{{wordName}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

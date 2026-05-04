@@ -1,0 +1,5 @@
+{
+    "require": {
+        "vizir/laravel-keycloak-web-guard": "^4.1"
+    }
+}

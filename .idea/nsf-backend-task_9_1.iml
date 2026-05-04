@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/ApiGateway/app" isTestSource="false" packagePrefix="Modules\ApiGateway\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/ApiGateway/database/factories" isTestSource="false" packagePrefix="Modules\ApiGateway\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/ApiGateway/database/seeders" isTestSource="false" packagePrefix="Modules\ApiGateway\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/ApiGateway/tests" isTestSource="true" packagePrefix="Modules\ApiGateway\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/Auth/app" isTestSource="false" packagePrefix="Modules\Auth\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/Auth/database/factories" isTestSource="false" packagePrefix="Modules\Auth\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/Auth/database/seeders" isTestSource="false" packagePrefix="Modules\Auth\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/Auth/tests" isTestSource="true" packagePrefix="Modules\Auth\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/Dictionary/app" isTestSource="false" packagePrefix="Modules\Dictionary\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/Dictionary/database/factories" isTestSource="false" packagePrefix="Modules\Dictionary\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/Dictionary/database/seeders" isTestSource="false" packagePrefix="Modules\Dictionary\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/Dictionary/tests" isTestSource="true" packagePrefix="Modules\Dictionary\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/TestService/app" isTestSource="false" packagePrefix="Modules\TestService\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/TestService/database/factories" isTestSource="false" packagePrefix="Modules\TestService\Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/TestService/database/seeders" isTestSource="false" packagePrefix="Modules\TestService\Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Modules/TestService/tests" isTestSource="true" packagePrefix="Modules\TestService\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/app" isTestSource="false" packagePrefix="App\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tests/Feature" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tests/Unit" isTestSource="true" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

@@ -1,0 +1,20 @@
+meta {
+  name: index
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8085/api/v1/dictionary
+  body: none
+  auth: none
+}
+
+params:query {
+  ~short_name: ТСРЯ
+  ~name: Большой толковый словарь русского языка (БТС). Гл. ред. С.А. Кузнецов, СПб., 2004
+  ~original_language: русский
+  ~publication_years: 1949
+  ~dictionary_version: 5
+  ~module_number: 1
+}

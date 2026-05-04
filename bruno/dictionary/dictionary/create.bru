@@ -1,0 +1,39 @@
+meta {
+  name: create
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8085/api/v1/dictionary
+  body: json
+  auth: none
+}
+
+body:json {
+   {
+       "name": "Толковый словарь русского языка",
+       "short_name": "ТСРЯ",
+       "alias": "tsrya",
+       "original_language": "русский",
+       "authors": [
+         {
+           "name": "Ожегов С.И."
+         },
+         {
+           "name": "Шведова Н.Ю."
+         }
+       ],
+       "main_editor": "Иванов А.А.",
+       "responsible_editors": [
+         {
+           "name": "Петров В.В."
+         }
+       ],
+       "publication_years": "1949-2020",
+       "publishing_house": "Издательство 'Русский язык'",
+       "publication_city": "Москва",
+       "dictionary_version": "5.2",
+       "module_number": "1"
+   }
+}

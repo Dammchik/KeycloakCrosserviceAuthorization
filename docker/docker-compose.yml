@@ -1,0 +1,193 @@
+services:
+  nsf-apache:
+    image: httpd:2.4-alpine
+    container_name: ${CONTAINER_NAME_APACHE}
+    volumes:
+      - ../src/:/var/www/html
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./apache/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+    ports:
+      - ${APACHE_HOST_HTTP_PORT}:80
+    networks:
+      - nsf-net
+      - nsf-external-net
+
+  nsf-api:
+    build:
+      context: ./
+      dockerfile: php/Dockerfile
+      args:
+        - PUID=${PUID}
+        - PGID=${PGID}
+        - INSTALL_XDEBUG=${INSTALL_XDEBUG}
+    container_name: ${CONTAINER_NAME_PHP}
+    environment:
+      XDEBUG_CONFIG: "client_host=host.docker.internal remote_connect_back=0 remote_enable=1 log=/tmp/xdebug.log"
+      PHP_IDE_CONFIG: "serverName=docker"
+      APACHE_RUN_USER: ${PUID}
+      APACHE_RUN_GROUP: ${PGID}
+    depends_on:
+      - nsf-keycloak
+    volumes:
+      - ../src:/var/www/html
+    networks:
+      - nsf-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  nsf-apache-postgres:
+    image: postgres:11.16-alpine3.16
+    container_name: ${CONTAINER_NAME_POSTGRES}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - nsf-net
+    ports:
+      - ${POSTGRES_PORT}:5432
+
+  nsf-redis:
+    image: redis:6.2-alpine
+    container_name: ${CONTAINER_NAME_REDIS}
+    volumes:
+      - redis_data:/data
+    restart: always
+    command: redis-server --loglevel warning
+    networks:
+      - nsf-net
+    ports:
+      - ${REDIS_PORT}:6380
+
+  nsf-opensearch:
+    image: opensearchproject/opensearch:2.11.0
+    container_name: ${CONTAINER_NAME_OPENSEARCH}
+    environment:
+      - cluster.name=nsf-cluster
+      - node.name=nsf-node
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "DISABLE_SECURITY_PLUGIN=true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    ports:
+      - ${OPENSEARCH_PORT}:9200
+      - ${OPENSEARCH_PERFORMANCE_ANALYZER_PORT}:9600
+    networks:
+      - nsf-net
+
+  nsf-opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.11.0
+    container_name: ${CONTAINER_NAME_OPENSEARCH_DASHBOARDS}
+    ports:
+      - ${OPENSEARCH_DASHBOARDS_PORT}:5601
+    environment:
+      - 'OPENSEARCH_HOSTS=["http://nsf-opensearch:9200"]'
+      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
+    networks:
+      - nsf-net
+    depends_on:
+      - nsf-opensearch
+
+  nsf-keycloak-db:
+    image: postgres:15
+    container_name: keycloak-db
+    environment:
+      - POSTGRES_DB=${KEYCLOAK_POSTGRES_DB}
+      - POSTGRES_USER=${KEYCLOAK_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD}
+    volumes:
+      - keycloak_data:/var/lib/postgresql/data
+    ports:
+      - ${KEYCLOAK_POSTGRES_PORT}:5432
+    networks:
+      - nsf-net
+
+  nsf-keycloak:
+    image: quay.io/keycloak/keycloak:26.2
+    container_name: keycloak
+    environment:
+      - KC_HOSTNAME=localhost
+      - KC_HOSTNAME_STRICT=false
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=keycloak-db
+      - KC_DB_URL_DATABASE=${KEYCLOAK_POSTGRES_DB}
+      - KC_DB_USERNAME=${KEYCLOAK_POSTGRES_USER}
+      - KC_DB_PASSWORD=${KEYCLOAK_POSTGRES_PASSWORD}
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - "8080:8080"
+    #    depends_on:
+    #      - keycloak-db
+    volumes:
+      - ./docker/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    command: start-dev
+    #-Dkeycloak.import=/opt/keycloak/data/import/realm-export.json
+    networks:
+      - nsf-net
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - nsf-net
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+#  minio:
+#    image: minio/minio
+#    container_name: minio
+#    environment:
+#      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+#      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+#    command: server --address ":${MINIO_PORT}" --console-address ":${MINIO_CONSOLE_PORT}" /data
+#    volumes:
+#      - ./minio-data:/data
+#    ports:
+#      - "${MINIO_PORT}:9100"
+#      - "${MINIO_CONSOLE_PORT}:9101"
+#    networks:
+#      - nsf-net
+
+networks:
+  nsf-external-net:
+    name: ${NETWORK_EXTERNAL_NAME}
+    driver: bridge
+  nsf-net:
+    name: ${NETWORK_NAME}
+
+volumes:
+  postgres_data:
+    name: ${VOLUME_NAME_POSTGRES}
+  redis_data:
+    name: ${VOLUME_NAME_REDIS}
+    driver: local
+  opensearch_data:
+    name: ${VOLUME_NAME_OPENSEARCH}
+    driver: local
+  grafana-storage:
+  keycloak_data:
+
+
+  minio-data:
